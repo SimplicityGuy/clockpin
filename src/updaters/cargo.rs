@@ -98,7 +98,7 @@ mod tests {
             args: &[&str],
             _cwd: &std::path::Path,
         ) -> anyhow::Result<crate::context::CmdOutput> {
-            let status = if args.iter().any(|a| *a == "update") {
+            let status = if args.contains(&"update") {
                 1
             } else {
                 0
