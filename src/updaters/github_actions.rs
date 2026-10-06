@@ -172,10 +172,11 @@ impl Updater for GithubActions {
                 continue;
             };
             let (new, changes) = rewrite_uses(&text, frozen, &resolver);
-            if !changes.is_empty() && !ctx.dry_run {
-                if let Err(e) = std::fs::write(wf, new) {
-                    return UpdateOutcome::errored(format!("write {}: {e}", wf.display()));
-                }
+            if !changes.is_empty()
+                && !ctx.dry_run
+                && let Err(e) = std::fs::write(wf, new)
+            {
+                return UpdateOutcome::errored(format!("write {}: {e}", wf.display()));
             }
             all_changes.extend(changes);
         }

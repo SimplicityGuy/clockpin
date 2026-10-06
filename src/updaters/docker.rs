@@ -136,11 +136,12 @@ impl Updater for Docker {
                 continue;
             };
             let (new, changes) = rewrite_from(&text, frozen, &resolver);
-            if !changes.is_empty() && !ctx.dry_run {
-                if let Err(e) = std::fs::write(df, new) {
-                    errors.push(format!("write {}: {e}", df.display()));
-                    continue;
-                }
+            if !changes.is_empty()
+                && !ctx.dry_run
+                && let Err(e) = std::fs::write(df, new)
+            {
+                errors.push(format!("write {}: {e}", df.display()));
+                continue;
             }
             all_changes.extend(changes);
         }
