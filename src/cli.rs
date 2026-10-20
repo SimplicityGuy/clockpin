@@ -140,12 +140,12 @@ pub fn resolve_root(path: Option<&std::path::Path>) -> PathBuf {
     let out = std::process::Command::new("git")
         .args(["rev-parse", "--show-toplevel"])
         .output();
-    if let Ok(o) = out {
-        if o.status.success() {
-            let s = String::from_utf8_lossy(&o.stdout).trim().to_string();
-            if !s.is_empty() {
-                return PathBuf::from(s);
-            }
+    if let Ok(o) = out
+        && o.status.success()
+    {
+        let s = String::from_utf8_lossy(&o.stdout).trim().to_string();
+        if !s.is_empty() {
+            return PathBuf::from(s);
         }
     }
     std::env::current_dir().unwrap_or_else(|_| PathBuf::from("."))

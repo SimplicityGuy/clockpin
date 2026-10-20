@@ -33,9 +33,15 @@ impl Default for Registry {
 impl Registry {
     /// GET a URL and parse JSON, capping the body and swallowing all errors.
     pub fn get_json(&self, url: &str) -> Option<Value> {
-        let resp = ureq::get(url).timeout(TIMEOUT).call().ok()?;
+        let mut resp = ureq::get(url)
+            .config()
+            .timeout_global(Some(TIMEOUT))
+            .build()
+            .call()
+            .ok()?;
         let mut buf = String::new();
-        resp.into_reader()
+        resp.body_mut()
+            .as_reader()
             .take((self.max_bytes as u64) + 1)
             .read_to_string(&mut buf)
             .ok()?;
